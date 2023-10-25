@@ -251,3 +251,6 @@ required-features = ["deflate"]
 name = "multipart"
 path = "tests/multipart.rs"
 required-features = ["multipart"]
+
+[patch.crates-io]
+native-tls = { git = "https://github.com/peridio/rust-native-tls.git", branch = "peridio-agent" }

@@ -1,0 +1,7 @@
+{
+    "rust-analyzer.cargo.features": [
+        "native-tls-vendored",
+        "native-tls"
+    ],
+    "rust-analyzer.showUnlinkedFileNotification": false
+}

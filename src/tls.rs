@@ -47,6 +47,8 @@ enum ClientCert {
     Pkcs12(native_tls_crate::Identity),
     #[cfg(feature = "native-tls")]
     Pkcs8(native_tls_crate::Identity),
+    #[cfg(feature = "native-tls")]
+    Pkcs11(native_tls_crate::Identity),
     #[cfg(feature = "__rustls")]
     Pem {
         key: rustls::PrivateKey,
@@ -214,6 +216,17 @@ impl Identity {
         })
     }
 
+    /// This requires the `native-tls` Cargo feature enabled.
+    #[cfg(feature = "native-tls")]
+    pub fn from_pkcs11_uri(pem: &[u8], key_uri: &str) -> crate::Result<Identity> {
+        Ok(Identity {
+            inner: ClientCert::Pkcs11(
+                native_tls_crate::Identity::from_pkcs11(pem, key_uri)
+                    .map_err(crate::error::builder)?,
+            ),
+        })
+    }
+
     /// Parses PEM encoded private key and certificate.
     ///
     /// The input should contain a PEM encoded private key
@@ -288,7 +301,7 @@ impl Identity {
         tls: &mut native_tls_crate::TlsConnectorBuilder,
     ) -> crate::Result<()> {
         match self.inner {
-            ClientCert::Pkcs12(id) | ClientCert::Pkcs8(id) => {
+            ClientCert::Pkcs12(id) | ClientCert::Pkcs8(id) | ClientCert::Pkcs11(id) => {
                 tls.identity(id);
                 Ok(())
             }
