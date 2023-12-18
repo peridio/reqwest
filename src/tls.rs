@@ -218,10 +218,10 @@ impl Identity {
 
     /// This requires the `native-tls` Cargo feature enabled.
     #[cfg(feature = "native-tls")]
-    pub fn from_pkcs11_uri(pem: &[u8], key_uri: &str) -> crate::Result<Identity> {
+    pub fn from_pkcs11_uri(cert_uri: &str, key_uri: &str) -> crate::Result<Identity> {
         Ok(Identity {
             inner: ClientCert::Pkcs11(
-                native_tls_crate::Identity::from_pkcs11(pem, key_uri)
+                native_tls_crate::Identity::from_pkcs11(cert_uri, key_uri)
                     .map_err(crate::error::builder)?,
             ),
         })
